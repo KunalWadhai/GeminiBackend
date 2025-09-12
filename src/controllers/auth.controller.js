@@ -9,7 +9,7 @@ const signup = async (req, res) => {
     const { mobile, password } = req.body;
 
     // Check if user already exists
-    const existingUser = await User.findOne({ where: { mobile } });
+    const existingUser = await User.findOne({where:{mobile}});
     if (existingUser) {
       return res.status(400).json({ error: 'User already exists' });
     }

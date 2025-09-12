@@ -6,6 +6,9 @@ const morgan = require('morgan');
 const { connectDB } = require('./config/database');
 const errorHandler = require('./middleware/errorHandler');
 
+// Import models to register them with Sequelize
+require('./models');
+
 const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
 const chatroomRoutes = require('./routes/chatroom.routes');

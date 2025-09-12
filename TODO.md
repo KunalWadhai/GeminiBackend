@@ -1,0 +1,5 @@
+- [x] Add sequelize.sync() to database.js to create tables
+- [x] Import models in app.js to register with Sequelize
+- [x] Change mobile field from NUMBER to STRING in user.model.js
+- [ ] Test the /auth/signup API in Postman
+- [ ] If issues persist, check server logs for specific error

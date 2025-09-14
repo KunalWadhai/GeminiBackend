@@ -3,6 +3,11 @@ const IORedis = require('ioredis');
 const { Message } = require('../models');
 const geminiService = require('./gemini.service');
 
+if (!process.env.REDIS_URL) {
+  throw new Error('REDIS_URL environment variable is not set');
+}
+console.log('Using Redis URL:', process.env.REDIS_URL);
+
 const redisConnection = new IORedis(process.env.REDIS_URL, { maxRetriesPerRequest: null });
 
 const geminiQueue = new Queue('gemini-queue', {

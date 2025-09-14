@@ -16,6 +16,9 @@ const subscriptionRoutes = require('./routes/subscription.routes');
 
 require('dotenv').config();
 
+const subscriptionController = require('./controllers/subscription.controller');
+app.use('/webhook/stripe', express.raw({ type: 'application/json' }), subscriptionController.handleWebhook);
+
 // Middleware
 app.use(cors());
 app.use(express.json());

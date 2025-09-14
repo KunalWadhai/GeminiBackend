@@ -4,12 +4,21 @@ const {User} = require("../models");
 const authenticate = async (req, res, next) => {
   try {
      let token = req.cookies.token;
+
+     // Also check Authorization header if cookie not present
+     if (!token && req.headers.authorization) {
+       const authHeader = req.headers.authorization;
+       if (authHeader.startsWith('Bearer ')) {
+         token = authHeader.substring(7);
+       }
+     }
+
      //console.log("Access Token", token);
      if(!token){
         return res.status(401).json({message: "Access Token Required"});
      }
      let decoded = verifyToken(token);
-     
+
      if (!decoded) {
        return res.status(401).json({ message: 'Invalid token' });
      }

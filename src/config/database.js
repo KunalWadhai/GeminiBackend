@@ -4,6 +4,12 @@ const { Sequelize } = require('sequelize');
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: 'postgres',
   logging: false, // Set to console.log to see SQL queries
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false // For self-signed certificates
+    }
+  },
   pool: {
     max: 5,
     min: 0,

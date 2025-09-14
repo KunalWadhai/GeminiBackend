@@ -4,8 +4,10 @@ const stripeService = require('../services/stripe.service');
 const subscribePro = async (req, res) => {
   try {
     const userId = req.user.id;
+    console.log(userId);
 
     const session = await stripeService.createCheckoutSession(userId);
+    console.log(session);
 
     res.json({ sessionId: session.id, url: session.url });
   } catch (error) {
@@ -41,12 +43,14 @@ const getSubscriptionStatus = async (req, res) => {
 
 const handleWebhook = async (req, res) => {
   try {
-    const event = stripeService.constructEvent(req.body, req.headers['stripe-signature']);
+    const sig = req.get('stripe-signature');
+    const event = stripeService.constructEvent(req.body, sig);
 
     await stripeService.handleWebhookEvent(event);
 
     res.json({ received: true });
   } catch (error) {
+    console.error('Webhook error:', error.message);
     res.status(400).json({ error: 'Webhook error' });
   }
 };

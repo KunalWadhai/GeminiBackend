@@ -71,6 +71,7 @@ const verifyOtp = async (req, res) => {
 
     // Generate JWT
     const token = generateToken(user.id);
+    res.cookie("token", token);
 
     res.json({ message: 'OTP verified successfully', token });
   } catch (error) {
@@ -98,25 +99,25 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-const changePassword = async (req, res) => {
+const resetPassword = async (req, res) => {
   try {
-    const { oldPassword, newPassword } = req.body;
+    const { otp, newPassword } = req.body;
     const userId = req.user.id;
 
     const user = await User.findByPk(userId);
-    if (!user.password) {
-      return res.status(400).json({ error: 'Password not set' });
+    //console.log(user);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
     }
 
-    const isValid = await bcrypt.compare(oldPassword, user.password);
-    if (!isValid) {
-      return res.status(400).json({ error: 'Invalid old password' });
+    if (user.otp !== otp || new Date() > user.otp_expiry) {
+      return res.status(400).json({ error: 'Invalid or expired OTP' });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    await user.update({ password: hashedPassword });
+    await user.update({ password: hashedPassword, otp: null, otp_expiry: null });
 
-    res.json({ message: 'Password changed successfully' });
+    res.json({ message: 'Password reset successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -127,5 +128,5 @@ module.exports = {
   sendOtp,
   verifyOtp,
   forgotPassword,
-  changePassword
+  resetPassword
 };

@@ -10,3 +10,5 @@ router.get('/:id', authenticate, chatroomController.getChatroom);
 router.post('/:id/message', authenticate, messageRateLimit, chatroomController.sendMessage);
 
 module.exports = router;
+
+

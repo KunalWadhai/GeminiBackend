@@ -1,14 +1,20 @@
 const jwt = require('jsonwebtoken');
 
+// const generateToken = (userId) => {
+//   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+//     expiresIn: '7d'
+//   });
+// };
+
 const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-    expiresIn: '7d'
-  });
-};
+  let token = jwt.sign({id: userId}, process.env.JWT_SECRET);
+  return token;
+}
 
 const verifyToken = (token) => {
   try {
-    return jwt.verify(token, process.env.JWT_SECRET);
+    let decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded;
   } catch (error) {
     return null;
   }

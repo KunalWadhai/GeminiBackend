@@ -19,7 +19,7 @@ const connectDB = async () => {
     console.log('Database connected successfully.');
 
     // Sync all models to create tables
-    await sequelize.sync({ force: true }); // Drop and recreate tables in development
+    await sequelize.sync(); // Create tables if they don't exist
     console.log('Database synced successfully.');
   } catch (error) {
     console.error('Unable to connect to the database:', error);

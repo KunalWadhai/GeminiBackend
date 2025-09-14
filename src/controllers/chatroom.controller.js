@@ -39,7 +39,6 @@ const getChatrooms = async (req, res) => {
       order: [['createdAt', 'DESC']]
     });
 
-    // Cache for 10 minutes
     await cacheService.set(cacheKey, JSON.stringify(chatrooms), 600);
 
     res.json({ chatrooms });
@@ -96,7 +95,7 @@ const sendMessage = async (req, res) => {
     // Add to queue for Gemini processing
     await queueService.addGeminiJob({
       messageId: userMessage.id,
-      message,
+      message:userMessage.message,
       chatroomId: id
     });
 

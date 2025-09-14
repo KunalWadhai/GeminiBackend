@@ -4,11 +4,12 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const generateResponse = async (message) => {
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
     const result = await model.generateContent(message);
     const response = await result.response;
     const text = response.text();
+    console.log(text);  
 
     return text;
   } catch (error) {
@@ -16,6 +17,7 @@ const generateResponse = async (message) => {
     throw new Error('Failed to generate AI response');
   }
 };
+
 
 module.exports = {
   generateResponse

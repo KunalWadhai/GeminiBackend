@@ -3,7 +3,8 @@ const IORedis = require('ioredis');
 const { Message } = require('../models');
 const geminiService = require('./gemini.service');
 
-const redisConnection = new IORedis(process.env.REDIS_URL || 'redis://localhost:6379', { maxRetriesPerRequest: null });
+// || 'redis://localhost:6379'
+const redisConnection = new IORedis(process.env.REDIS_URL, { maxRetriesPerRequest: null });
 
 const geminiQueue = new Queue('gemini-queue', {
   connection: redisConnection
@@ -21,13 +22,18 @@ const addGeminiJob = async (data) => {
 
 // Worker to process Gemini jobs
 const worker = new Worker('gemini-queue', async (job) => {
+  console.log("Job Data", job.data);  // as on console we are getting this data, all set
+  if (!job.data || !job.data.messageId || !job.data.message) {
+    throw new Error('Invalid job data: missing messageId or message');
+  }
+
   const { messageId, message } = job.data;
 
   try {
-    const response = await geminiService.generateResponse(message);
+    const AIresponse = await geminiService.generateResponse(message);
 
     await Message.update(
-      { response },
+      { response: AIresponse },
       { where: { id: messageId } }
     );
 

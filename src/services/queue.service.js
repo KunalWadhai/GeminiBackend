@@ -3,7 +3,6 @@ const IORedis = require('ioredis');
 const { Message } = require('../models');
 const geminiService = require('./gemini.service');
 
-// || 'redis://localhost:6379'
 const redisConnection = new IORedis(process.env.REDIS_URL, { maxRetriesPerRequest: null });
 
 const geminiQueue = new Queue('gemini-queue', {
